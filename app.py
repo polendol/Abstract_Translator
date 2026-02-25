@@ -64,10 +64,25 @@ def translate_abstract(abstract, n):
     if not abstract.strip():
         return "Please enter an abstract."
     prompt = f"""
-    1. Translate this abstract: '{abstract}'
-    2. Check the word count of the translation using your 'count_words' tool.
-    3. If the count is not exactly {n} words, rewrite the Spanish version to be shorter or longer.
-    4. Provide the final Spanish translation as your final answer.
+    You are an expert Academic Translator. Your goal is to provide a Spanish translation of an abstract that is EXACTLY    
+    {n} words long. Follow these steps:
+
+    1. TRANSLATE: Translate the following English abstract into academic Spanish using the translate tool: '{abstract}'
+    2. COUNT: Use the 'count_words' tool on your translation.
+    3. ITERATE: If the count is not {n}, edit the Spanish text. 
+       - If the count > {n}: Use more concise Spanish academic phrasing.
+       - If too count < {n}: Expand descriptions using formal Spanish adjectives.
+    4. FINAL VALIDATION: You must use the 'count_words' tool one last time before finishing.
+    
+    CONSTRAINTS:
+    - The final output must be 100% in Spanish.
+    - Do not summarize; maintain the original meaning while hitting the word count.
+    - Final sentence must say how many words the final output has
+    
+    [Output Format]
+    [Reasoning]: (Briefly describe your adjustments in English)
+    [Final Spanish Abstract]: (The text)
+    [Word Count]: El resumen tiene x palabras.
     """
     return editor_agent.run(prompt)
 
@@ -79,7 +94,7 @@ demo = gr.Interface(
         gr.Slider(minimum=50, maximum=500, step=10, label="Target Word Count")
     ],
     outputs=gr.Textbox(label="Final Spanish Translation"),
-    title="Agentic Abstract Editor"
+    title="Abstract Translator"
 )
 
 # launch
