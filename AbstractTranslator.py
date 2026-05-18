@@ -1,5 +1,8 @@
 import os
-from tools import translate, count_words
+
+from litellm import nlp_cloud_models
+
+from tools import translate, count_words, nlp
 from smolagents import ToolCallingAgent, LiteLLMModel
 import gradio as gr
 
@@ -37,7 +40,16 @@ def translate_abstract(abstract, n):
     [Final Spanish Abstract]: (The text)
     [Word Count]: El resumen tiene x palabras.
     """
-    return editor_agent.run(prompt)
+    result = editor_agent.run(prompt)
+
+    if "[Final Spanish Abstract]" in result:
+        spanish = result.split("[Final Spanish Abstract]")[1]
+        spanish = spanish.split("[Word Count]")[0].strip()
+        final_abstract = len([t for t in nlp(spanish) if t.is_alpha])
+
+        result += f"\n\n Final count: {final_abstract} words"
+
+    return result
 
 # Gradio dashboard
 demo = gr.Interface(

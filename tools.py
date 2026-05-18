@@ -27,7 +27,10 @@ def translate(text: str) -> str:
     """
 
     inputs = tokenizer(text, return_tensors="pt", truncation=True, max_length=512).to("cpu")
-    output_tokens = translator.generate(**inputs)
+    output_tokens = translator.generate(**inputs,
+                                        max_new_tokens=600,
+                                        num_beams=4,
+                                        early_stopping=True)
     translation = tokenizer.decode(output_tokens[0], skip_special_tokens=True)
     return translation
 
@@ -40,6 +43,5 @@ def count_words(text: str) -> int:
         text: The Spanish translation string to count words from.
      """
     abstract = nlp(text)
-    # Note the fix: token.is_alpha (with underscore)
     word_n = len([token for token in abstract if token.is_alpha])
     return word_n
