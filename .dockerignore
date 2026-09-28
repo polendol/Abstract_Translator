@@ -1,0 +1,44 @@
+# Local model caches and data
+.cache/
+models/
+*.gguf
+*.safetensors
+*.bin
+
+# Python environments
+.venv/
+venv/
+ENV/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Editor config
+.idea/
+.vscode/
+
+# Git
+.git/
+.gitignore
+
+# Secret
+.env
+.env.local
+
+# Logs
+*.log
+.DS_Store
+Thumbs.db
+
+# Gradio runtime files
+flagged/
+.gradio/
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose.yml

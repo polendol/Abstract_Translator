@@ -12,6 +12,31 @@ Translation uses `Helsinki-NLP/opus-mt-en-mul` for Spanish translation and `es_c
 
 The program uses gradio interface.
 
+## Docker
+
+## Requirements
+1. Docker & Docker Compose: Installed and running (Docker Desktop for Windows/macOS or Docker Engine on Linux). Compose is included by default with Docker Desktop, or available via docker-compose-plugin.
+2. NVIDIA GPU (recommended): An NVIDIA graphics card with up-to-date drivers, used by Ollama to run gemma3:4b-it-qat and by PyTorch for the translation model. Without a GPU the project still runs on CPU, but responses will be much slower.
+3. NVIDIA Container Toolkit: Required on Linux/WSL2 so Docker can pass GPU access to the containers. Docker Desktop on Windows handles this automatically with the WSL2 backend and current drivers.
+4. Hardware: Minimum 8 GB RAM (16 GB recommended), 4 GB+ VRAM on your NVIDIA GPU, and at least 15 GB free disk space for the Python/PyTorch image, the Ollama image, the Helsinki-NLP/opus-mt-en-mul translation model (~300 MB), and the gemma3:4b-it-qat model (~4 GB).
+5. Internet access: Needed on the first run to build the image, pull ollama/ollama, and download the gemma3:4b-it-qat model. After that, everything runs offline.
+6. Network / Ports: Port 7860 must be free on your machine, since the Gradio interface is exposed there (http://localhost:7860).
+7. Storage / Permissions: Ollama models are stored in a Docker named volume (ollama:/root/.ollama), so they persist between restarts. Deleting volumes (docker compose down -v) removes the downloaded model and requires pulling it again.
+
+## How it works 
+1. Multi-Stage Build:
+Builder (python:3.12-slim): Creates the Python virtual environment and installs all dependencies (gradio, transformers, smolagents, spacy, litellm, torch) plus the Spanish spaCy model. It also pre-downloads the Helsinki-NLP/opus-mt-en-mul translation model.
+Runtime (python:3.12-slim): Copies only the finished virtual environment and the cached translation model, leaving behind pip caches and build tooling to keep the final image as lean as possible.
+2. Two Services: Docker Compose runs the app (built from the Dockerfile) and Ollama (pulled from ollama/ollama). The app reaches Ollama over the internal Docker network at http://ollama:11434, so no ports need to be opened for it.
+3. Security: The app runs as a non-root user (appuser with UID 1001).
+4. Hugging Face Cache: The translation model is baked into the image at /home/appuser/.cache/huggingface (HF_HOME) during the build, with HF_HUB_OFFLINE=1 so the container never downloads anything at runtime.
+5. Ollama Model Storage: The gemma3:4b-it-qat model is stored in a named Docker volume (ollama). It is downloaded only once and reused on subsequent runs, until you delete the volume with docker compose down -v.
+6. Gradio Web Interface: Listens on port 7860 bound to 0.0.0.0, exposed to your machine at http://localhost:7860.
+7. Step-by-step: build and start both services (`docker compose up -d --build`), download the language model once (`docker compose exec ollama ollama pull gemma3:4b-it-qat`), then open `http://localhost:7860`. To stop everything, run `docker compose down`.
+8. See How it works section in Local section below for specifics on how the program and output details
+
+## Local
+
 ## Requirements
 - Python 3.8+
 - gradio
@@ -47,7 +72,7 @@ Enter the number of words of your translation
 4. If the word count does not match the target, the agent iterates by expanding 
    or condensing the Spanish text using formal academic phrasing
 5. The final validated translation is returned to the user
-6. 
+
 ## File structure
 - `AbstractTranslator.py` - main program, run this to launch the app
 - `tools.py` - file containing agent tools
