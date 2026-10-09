@@ -79,3 +79,15 @@ Enter the number of words of your translation
 - `requirements.txt` — Python dependencies
 - `README.md` — this file
 
+## License & Attributions
+
+### Repository License
+This project is licensed under the [MIT License](LICENSE) — see the LICENSE file for details.
+
+### Model & Software Attributions
+* **Agent Framework:** Built using [`smolagents`](https://github.com/huggingface/smolagents) (Apache 2.0 License).
+* **Reasoning Model:** Powered by [Google Gemma 3](https://ai.google.dev/gemma) (`gemma3:4b-it-qat`). Usage of Gemma model weights is subject to the [Google Gemma Terms of Use](https://ai.google.dev/gemma/terms) and [Prohibited Use Policy](https://ai.google.dev/gemma/prohibited_use_policy).
+* **Translation Model:** [`Helsinki-NLP/opus-mt-en-mul`](https://huggingface.co/Helsinki-NLP/opus-mt-en-mul) hosted on Hugging Face ([CC-BY-4.0 License](https://creativecommons.org/licenses/by/4.0/)).
+* **NLP & Tokenization:** Uses [spaCy](https://spacy.io/) and its `es_core_news_sm` pipeline ([MIT License](https://github.com/explosion/spaCy/blob/master/LICENSE)).
+* **Inference Engine & Interface:** Powered by [Ollama](https://ollama.com) (MIT License) and [Gradio](https://github.com/gradio-app/gradio) (Apache 2.0 License).
+
