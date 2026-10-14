@@ -21,7 +21,7 @@
 
 ## 💡 Overview
 
-A side project built in my spare time to cover a **real need**: translating an academic abstract into Spanish while keeping it at a specific number of words, something submission forms often require. Unpublished abstracts are also sensitive, so everything runs **locally**.
+A side project built in my spare time to cover my **real user need**: translating an academic abstract into Spanish while keeping it at a specific number of words, something submission forms often require. Unpublished abstracts are also sensitive, so everything runs **locally**.
 
 The work is split between three components:
 
